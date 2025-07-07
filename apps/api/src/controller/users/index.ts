@@ -3,7 +3,6 @@ import { validator, basicAuth } from '@/controller/middleware'
 import { z } from 'zod'
 import createUser from './create'
 import listUsers from './list'
-import listOnboardedUsers from './listOnboarded'
 import deleteUser from './delete'
 
 const protectedRouter = express.Router()
@@ -42,7 +41,6 @@ protectedRouter.delete(
 )
 
 const router = express.Router()
-router.get('/onboarded', listOnboardedUsers)
 router.use('/', protectedRouter)
 
 export default router

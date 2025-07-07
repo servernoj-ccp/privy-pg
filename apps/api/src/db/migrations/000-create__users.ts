@@ -4,8 +4,8 @@ import { Sequelize, DataTypes } from 'sequelize'
 type M = MigrationFn<Sequelize>
 
 const Roles = [
-  'Seller',
-  'Buyer'
+  'seller',
+  'buyer'
 ] as const
 
 export const up: M = async ({ context: sequelize }) => {
@@ -40,4 +40,5 @@ export const down: M = async ({ context: sequelize }) => {
   await qi.dropTable({
     tableName: 'users'
   })
+  await sequelize.query('drop type if exists "enum_users_roles"')
 }

@@ -19,16 +19,12 @@ export default function ({ role }: PropsWithChildren<Props>) {
     () => {
       const run = async () => {
         if (ready && !authenticated) {
-          await navigate(`/${role}/login?return=${pathname}`, {
-            state: {
-              source: 'logout'
-            }
-          })
+          await navigate(`/${role}/login?return=${pathname}`)
         }
       }
       run()
     },
-    [authenticated]
+    [ready, authenticated]
   )
 
 

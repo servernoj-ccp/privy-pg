@@ -2,8 +2,8 @@ import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '@/db'
 
 const Roles = [
-  'Seller',
-  'Buyer'
+  'seller',
+  'buyer'
 ] as const
 
 class User extends Model {
