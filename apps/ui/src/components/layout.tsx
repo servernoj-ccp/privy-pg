@@ -8,7 +8,6 @@ const pathForPadding = [
 
 export default function ()  {
   const navigate = useNavigate()
-  const isIframe = window.self !== window.top
   const items = [
     {
       label: 'Home',
@@ -20,58 +19,33 @@ export default function ()  {
     {
       label: 'Seller',
       icon: 'pi pi-briefcase',
-      items: [
-        {
-          label: 'Account',
-          command: () => {
-            navigate('/seller')
-          }
-        },
-        {
-          label: 'Receipts',
-          command: () => {
-            navigate('/seller/receipts')
-          }
-        }
-      ]
+      command: () => {
+        navigate('/seller')
+      }
     },
     {
       label: 'Buyer',
       icon: 'pi pi-credit-card',
       items: [
         {
-          label: 'Shopping',
+          label: 'Guest',
           command: () => {
-            navigate('/buyer/shopping')
+            navigate('/buyer')
           }
         },
         {
-          label: 'Receipts',
+          label: 'Authenticated',
           command: () => {
-            navigate('/buyer/receipts')
+            navigate('/buyer/authenticated')
           }
         }
       ]
     }
   ]
-  const contentWithPadding = isIframe || pathForPadding.includes(location.pathname)
-  const contentClassName = [
-    'prose',
-    'max-w-full',
-    'flex-grow',
-    'overflow-y-auto',
-    ...(
-      contentWithPadding
-        ? ['p-8']
-        : []
-    )
-  ].join(' ')
 
   return <main className='h-full flex flex-col overflow-y-hidden'>
-    {
-      !isIframe && <Menubar model={items} />
-    }
-    <article className={contentClassName}>
+    <Menubar model={items} />
+    <article className='prose max-w-full flex-grow overflow-y-auto p-8'>
       <Outlet/>
     </article>
   </main>

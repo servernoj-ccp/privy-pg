@@ -7,24 +7,19 @@ import 'primeicons/primeicons.css'
 import App from '@/app'
 import { ToastContext } from '@/toast'
 import { Toast } from 'primereact/toast'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-
-const queryClient = new QueryClient()
 
 const init = async () => {
   const Root = () => {
     const toastRef = useRef<Toast>(null) as RefObject<Toast>
     return (
-      <StrictMode>
-        <PrimeReactProvider>
-          <ToastContext.Provider value={toastRef}>
-            <QueryClientProvider client={queryClient}>
-              <App />
-            </QueryClientProvider>
-            <Toast ref={toastRef}/>
-          </ToastContext.Provider>
-        </PrimeReactProvider>
-      </StrictMode>
+      // <StrictMode>
+      <PrimeReactProvider>
+        <ToastContext.Provider value={toastRef}>
+          <App />
+          <Toast ref={toastRef}/>
+        </ToastContext.Provider>
+      </PrimeReactProvider>
+      // </StrictMode>
     )
   }
   // -- Initialize and mount the App

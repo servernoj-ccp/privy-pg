@@ -1,5 +1,5 @@
 export default function () {
   return <div>
-    Seller
+    Authenticated buyer
   </div>
 }

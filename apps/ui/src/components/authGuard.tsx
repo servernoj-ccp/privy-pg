@@ -1,40 +1,37 @@
-import { api } from '@/axios'
-import { useLogin, useLogout, useModalStatus, usePrivy, useIdentityToken, useUser } from '@privy-io/react-auth'
+import { useLogout, usePrivy, useIdentityToken, useUser } from '@privy-io/react-auth'
 import { Button } from 'primereact/button'
 import { PropsWithChildren, useEffect } from 'react'
-import { Outlet } from 'react-router'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 
 interface Props {
-  disableSignup?: boolean
+  role: 'buyer' | 'seller'
 }
 
-export default function ({ disableSignup = false }: PropsWithChildren<Props>) {
-  const { isOpen: isModalOpen } = useModalStatus()
+export default function ({ role }: PropsWithChildren<Props>) {
   const { refreshUser } = useUser()
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
   const { identityToken } = useIdentityToken()
   const { logout } = useLogout()
-  const { login } = useLogin({
-    onError: (e) => {
-      console.error('---', e)
-    },
-    onComplete: async ({ isNewUser }) => {
-      if (isNewUser && !disableSignup) {
-        // -- this is a new Buyer
-        await api.post('/buyer')
-      }
-    }
-  })
+
   const { ready, authenticated } = usePrivy()
   useEffect(
     () => {
-      if (ready && !isModalOpen && !authenticated) {
-        login({
-          disableSignup
-        })
+      const run = async () => {
+        if (ready && !authenticated) {
+          await navigate(`/${role}/login?return=${pathname}`, {
+            state: {
+              source: 'logout'
+            }
+          })
+        }
       }
+      run()
     },
-    [ready, authenticated, isModalOpen]
+    [authenticated]
   )
+
+
   return ready
     ? (
       authenticated && <section className='h-full flex flex-col gap-8'>
