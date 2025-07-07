@@ -42,17 +42,6 @@ const catcherWithContext = (action: string, context: any = {}) => (error: Error)
   return null
 }
 
-const bigIntToString = (obj: any): any => {
-  if (typeof obj === 'bigint') {
-    return obj.toString()
-  } else if (Array.isArray(obj)) {
-    return obj.map(bigIntToString)
-  } else if (typeof obj === 'object' && obj !== null) {
-    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, bigIntToString(v)]))
-  }
-  return obj
-}
-
 const sleep = (delayInMs: number) => new Promise<void>(
   resolve => {
     const timer = setTimeout(
@@ -65,10 +54,4 @@ const sleep = (delayInMs: number) => new Promise<void>(
   }
 )
 
-const toCents = (amount:number) => Math.round(amount * 100)
-const fromCents = (amount:number) => amount / 100
-
-const roundToCents = (amount:number) => Math.round(amount * 100) / 100
-
-
-export { throttler, catcher, catcherWithContext, bigIntToString, toCents, fromCents, roundToCents, sleep }
+export { throttler, catcher, catcherWithContext, sleep }
