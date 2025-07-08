@@ -154,6 +154,9 @@ importers:
       abitype:
         specifier: ^1.0.8
         version: 1.0.8(typescript@5.8.3)(zod@3.24.3)
+      rollup-plugin-node-externals:
+        specifier: ^8.0.1
+        version: 8.0.1(rollup@4.40.1)
 
   apps/ui:
     dependencies:
@@ -3920,6 +3923,12 @@ packages:
   reusify@1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
+
+  rollup-plugin-node-externals@8.0.1:
+    resolution: {integrity: sha512-j6uve/BPEyHCmQuXpu5/LT5qXw69QLIi6YnFrs6F7tmGFXjkFDT0zqZMt0KaMuWSvkcxJFBklsKfYYoKKEPwyw==}
+    engines: {node: '>= 21 || ^20.6.0 || ^18.19.0'}
+    peerDependencies:
+      rollup: ^4.0.0
 
   rollup@4.40.1:
     resolution: {integrity: sha512-C5VvvgCCyfyotVITIAv+4efVytl5F7wt+/I2i9q9GZcEXW9BP52YYOXC58igUi+LFZVHukErIIqQSWwv/M3WRw==}
@@ -9843,6 +9852,10 @@ snapshots:
   retry-as-promised@7.0.4: {}
 
   reusify@1.0.4: {}
+
+  rollup-plugin-node-externals@8.0.1(rollup@4.40.1):
+    dependencies:
+      rollup: 4.40.1
 
   rollup@4.40.1:
     dependencies:

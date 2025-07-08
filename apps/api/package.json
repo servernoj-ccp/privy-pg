@@ -45,6 +45,7 @@
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "@types/multer": "^1.4.12",
-    "abitype": "^1.0.8"
+    "abitype": "^1.0.8",
+    "rollup-plugin-node-externals": "^8.0.1"
   }
 }

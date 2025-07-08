@@ -20,12 +20,6 @@ export default defineConfig({
             'src/server.ts',
             import.meta.url
           )
-        ),
-        workers: fileURLToPath(
-          new URL(
-            'src/workers/runner.ts',
-            import.meta.url
-          )
         )
       }
     }
