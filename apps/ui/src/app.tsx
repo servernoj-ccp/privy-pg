@@ -17,8 +17,8 @@ function App () {
         <Route element={<Layout/>}>
           <Route index element={<Home />} />
           <Route path="/seller/*">
-            <Route path="login" element={<Login disableSignup/>}/>
-            <Route element={<AuthGuard role='seller'/>}>
+            <Route path="login" element={<Login/>}/>
+            <Route element={<AuthGuard/>}>
               <Route element={<TokenGuard/>}>
                 <Route index element={<Seller/>}/>
               </Route>
@@ -27,7 +27,7 @@ function App () {
           <Route path="/buyer/*" >
             <Route index element={<GuestBuyer/>}/>
             <Route path="login" element={<Login/>}/>
-            <Route element={<AuthGuard role='buyer'/>}>
+            <Route element={<AuthGuard/>}>
               {/* <Route element={<WalletGuard/>}> */}
               <Route element={<TokenGuard/>}>
                 <Route path='authenticated' element={<AuthenticatedBuyer/>}/>

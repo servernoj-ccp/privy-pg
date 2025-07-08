@@ -1,33 +1,33 @@
 import { useLogout, usePrivy, useIdentityToken, useUser } from '@privy-io/react-auth'
 import { Button } from 'primereact/button'
-import { PropsWithChildren, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router'
+import { ProgressSpinner } from 'primereact/progressspinner'
 
-interface Props {
-  role: 'buyer' | 'seller'
-}
 
-export default function ({ role }: PropsWithChildren<Props>) {
+export default function () {
   const { refreshUser } = useUser()
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { identityToken } = useIdentityToken()
   const { logout } = useLogout()
-
+  const [authorized, setAuthorized] = useState(false)
+  const role = pathname?.match(/[/](?<role>[^/]+)/)?.groups?.role
   const { ready, authenticated, user } = usePrivy()
   useEffect(
     () => {
       const run = async () => {
-        console.log('---', user?.customMetadata)
-        if (
-          ready && (
-            !authenticated || (
-              !user?.customMetadata?.isSeller && role === 'seller'
-            )
-          )
-        ) {
-          await logout()
-          await navigate(`/${role}/login?return=${pathname}`)
+        if (ready) {
+          const isAuthorizedSeller = Boolean(user?.customMetadata?.isSeller) && role === 'seller'
+          const isAuthorizedBuyer = Boolean(user?.customMetadata?.isBuyer) && role === 'buyer'
+          const isAuthorized = isAuthorizedSeller || isAuthorizedBuyer
+          setAuthorized(isAuthorized)
+          if (!authenticated || !isAuthorized) {
+            if (!isAuthorized) {
+              await logout()
+            }
+            await navigate(`/${role}/login?return=${pathname}`)
+          }
         }
       }
       run()
@@ -37,13 +37,13 @@ export default function ({ role }: PropsWithChildren<Props>) {
 
   return ready
     ? (
-      authenticated && <section className='h-full flex flex-col gap-8'>
+      authenticated && authorized && <section className='h-full flex flex-col gap-8'>
         <section className='flex gap-8'>
           <Button
             size='small'
             onClick={
               async () => {
-                logout()
+                await logout()
               }
             }>Logout</Button>
           <Button
@@ -63,7 +63,7 @@ export default function ({ role }: PropsWithChildren<Props>) {
         <Outlet/>
       </section>
     )
-    : <>
-      {/* additional loading animation */}
-    </>
+    : <section className='h-full w-full flex justify-center items-center'>
+      <ProgressSpinner aria-label="Loading" />
+    </section>
 }

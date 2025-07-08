@@ -6,14 +6,6 @@ const handler: RequestHandler = async (req, res, next) => {
   try {
     const { email } = res.locals.parsed.body
     const { privyClient } = res.locals
-    let user = await User.findOne({
-      where: {
-        email
-      }
-    })
-    if (user) {
-      await user.destroy()
-    }
     try {
       // -- Privy
       let privyUser = await privyClient.getUserByEmail(email)
@@ -33,16 +25,21 @@ const handler: RequestHandler = async (req, res, next) => {
         ),
         isSeller: true
       })
-      user = await User.create({
-        email,
-        privy_id: privyUser.id,
-        roles: [
-          'seller',
-          ...(
-            privyUser.customMetadata?.isBuyer ? ['buyer'] : []
-          )
-        ]
+      const [user, created] = await User.findOrCreate({
+        where: {
+          email
+        },
+        defaults: {
+          email,
+          privy_id: privyUser.id,
+          roles: ['seller']
+        }
       })
+      if (!created && privyUser.customMetadata.isBuyer) {
+        await user.update({
+          roles: ['buyer', 'seller']
+        })
+      }
       res.json(user)
     } catch (e) {
       console.log(e)

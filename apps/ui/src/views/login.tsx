@@ -1,74 +1,55 @@
 import { api } from '@/axios'
-import { useToast } from '@/toast'
-import { useLoginWithEmail, usePrivy } from '@privy-io/react-auth'
+import { useLoginWithEmail, usePrivy, useUser } from '@privy-io/react-auth'
 import { Button } from 'primereact/button'
 import { Card } from 'primereact/card'
 import { InputOtp } from 'primereact/inputotp'
 import { InputText } from 'primereact/inputtext'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
-type Props = {
-  disableSignup?: boolean
-}
-
-export default function ({ disableSignup = false }: PropsWithChildren<Props>) {
+export default function () {
+  const { refreshUser } = useUser()
   const { loginWithCode, sendCode, state } = useLoginWithEmail({
     onComplete: async ({ isNewUser, user }) => {
-      const userRoles = (user.customMetadata?.roles ?? []) as Array<string>
       if (
-        role === 'buyer' &&
-        isNewUser
+        role === 'buyer' && (
+          isNewUser || !user.customMetadata?.isBuyer
+        )
       ) {
         await api.post('/buyers')
+        await refreshUser()
       }
-      if (
-        role === 'seller' &&
-        !userRoles.includes('seller')
-      ) {
-        errorHandler(new Error('Invalid role'))
-        await new Promise<void>(
-          resolve => {
-            const timer = setTimeout(
-              () => {
-                clearTimeout(timer)
-                resolve()
-              },
-              3000
-            )
-          }
-        )
-        await logout()
-        location.reload()
-      } else {
-        const returnPath = new URLSearchParams(search).get('return') ?? '../'
-        await navigate(returnPath)
-      }
+      const returnPath = new URLSearchParams(search).get('return') ?? '../'
+      await navigate(returnPath)
     }
   })
-  const { errorHandler } = useToast()
   const navigate = useNavigate()
   const { search, pathname } = useLocation()
-  const { authenticated, logout } = usePrivy()
+  const { authenticated } = usePrivy()
   const [email, setEmail] = useState('')
   const [code, setCode] = useState('')
   const role = pathname?.match(/[/](?<role>[^/]+)[/]login/)?.groups?.role
   const initialTitle = role === 'seller'
-    ? 'Login'
-    : 'SignIn / SignUp'
+    ? 'Continue as a Seller'
+    : 'Continue as a Buyer'
+  const isWrongState = !authenticated && state.status === 'done'
 
-  const handleSubmit = async (ev: any) => {
+  const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
     if (state.status === 'initial') {
-      await sendCode({ email, disableSignup })
+      await sendCode({ email, disableSignup: role === 'seller' })
     } else if (state.status === 'awaiting-code-input') {
-      await loginWithCode({ code })
+      try {
+        await loginWithCode({ code })
+      } catch (e) {
+        console.error((e as Error).message)
+      }
     }
   }
   useEffect(
     () => {
       const run = async () => {
-        if (!authenticated && state.status === 'done') {
+        if (isWrongState) {
           location.reload()
         }
       }
@@ -79,49 +60,61 @@ export default function ({ disableSignup = false }: PropsWithChildren<Props>) {
 
   return <div className="flex flex-col h-full justify-center items-center">
     {
-      state.status === 'initial'
-        ? <Card title={initialTitle} className="w-[400px]">
-          <div className="w-full">
-            <label htmlFor="email" className="font-bold block mb-2">Email</label>
-            <form className="p-inputgroup w-full" onSubmit={handleSubmit}>
-              <InputText
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <Button
-                type="submit"
-                disabled={!email}
-                label="Submit"
-                className='p-button-info'
-                onClick={handleSubmit}
-              />
-            </form>
-          </div>
-        </Card>
-        : <Card title="Enter confirmation code" className="w-[400px]">
-          <form className="w-full" onSubmit={handleSubmit}>
+      isWrongState
+        ? <></>
+        : state.status === 'error'
+          ? <article className='flex flex-col gap-4'>
+            <meta httpEquiv="refresh" content="5;" />
+            <h2 className="text-red-600">
+              { state.error?.message ?? 'Unknown error' }
+            </h2>
             <p>
-              Please check {email} for an email from StyleVie and enter your code below.
+              You will be automatically redirected to login prompt in a few seconds
             </p>
-            <InputOtp
-              length={6}
-              id="otp"
-              value={code}
-              onChange={(e) => setCode(e.value as string)}
-            />
-            <Button
-              type="submit"
-              severity='info'
-              disabled={!code}
-              label="Submit"
-              className='mt-6'
-              onClick={handleSubmit}
-            />
-          </form>
-        </Card>
+          </article>
+          : state.status === 'initial'
+            ? <Card title={initialTitle} className="w-[400px]">
+              <div className="w-full">
+                <label htmlFor="email" className="font-bold block mb-2">Email</label>
+                <form className="p-inputgroup w-full" onSubmit={handleSubmit}>
+                  <InputText
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <Button
+                    type="submit"
+                    disabled={!email}
+                    label="Submit"
+                    className='p-button-info'
+                  />
+                </form>
+              </div>
+            </Card>
+            : state.status === 'awaiting-code-input'
+              ? <Card title="Enter confirmation code" className="w-[400px]">
+                <form className="w-full" onSubmit={handleSubmit}>
+                  <p>
+                    Please check <strong>{email}</strong> for an email from StyleVie and enter your code below.
+                  </p>
+                  <InputOtp
+                    length={6}
+                    id="otp"
+                    value={code}
+                    onChange={(e) => setCode(e.value as string)}
+                  />
+                  <Button
+                    type="submit"
+                    severity='info'
+                    disabled={!code}
+                    label="Submit"
+                    className='mt-6'
+                  />
+                </form>
+              </Card>
+              : <>
+              </>
     }
-    <pre>{JSON.stringify({ role, authenticated, state: state.status })}</pre>
   </div>
 }
