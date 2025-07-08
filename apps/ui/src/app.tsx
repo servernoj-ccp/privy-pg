@@ -18,7 +18,7 @@ function App () {
           <Route index element={<Home />} />
           <Route path="/seller/*">
             <Route path="login" element={<Login/>}/>
-            <Route element={<AuthGuard/>}>
+            <Route element={<AuthGuard key='seller'/>}>
               <Route element={<TokenGuard/>}>
                 <Route index element={<Seller/>}/>
               </Route>
@@ -27,7 +27,7 @@ function App () {
           <Route path="/buyer/*" >
             <Route index element={<GuestBuyer/>}/>
             <Route path="login" element={<Login/>}/>
-            <Route element={<AuthGuard/>}>
+            <Route element={<AuthGuard key='buyer'/>}>
               {/* <Route element={<WalletGuard/>}> */}
               <Route element={<TokenGuard/>}>
                 <Route path='authenticated' element={<AuthenticatedBuyer/>}/>

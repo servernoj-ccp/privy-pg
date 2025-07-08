@@ -1,11 +1,15 @@
-import { useDelegatedActions, useHeadlessDelegatedActions, useModalStatus, usePrivy } from '@privy-io/react-auth'
+import {
+  useDelegatedActions,
+  // useHeadlessDelegatedActions,
+  useModalStatus,
+  usePrivy
+} from '@privy-io/react-auth'
 import { useEffect } from 'react'
 import { Outlet } from 'react-router'
 
 export default function () {
   const { isOpen: isModalOpen } = useModalStatus()
-  // const { delegateWallet } = useDelegatedActions()
-  const { delegateWallet } = useHeadlessDelegatedActions()
+  const { delegateWallet } = useDelegatedActions()
   const { user } = usePrivy()
   useEffect(
     () => {

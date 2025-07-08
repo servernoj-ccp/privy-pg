@@ -35,9 +35,9 @@ export default function () {
     [ready, authenticated, user, pathname]
   )
 
-  return ready
+  return ready && authenticated && authorized
     ? (
-      authenticated && authorized && <section className='h-full flex flex-col gap-8'>
+      <section className='h-full flex flex-col gap-8'>
         <section className='flex gap-8'>
           <Button
             size='small'
@@ -63,7 +63,9 @@ export default function () {
         <Outlet/>
       </section>
     )
-    : <section className='h-full w-full flex justify-center items-center'>
-      <ProgressSpinner aria-label="Loading" />
-    </section>
+    : (
+      <section className='h-full w-full flex justify-center items-center'>
+        <ProgressSpinner aria-label="Loading" />
+      </section>
+    )
 }

@@ -73,7 +73,7 @@ export default function () {
             </p>
           </article>
           : state.status === 'initial'
-            ? <Card title={initialTitle} className="w-[400px]">
+            ? <Card title={initialTitle} className="w-[500px]">
               <div className="w-full">
                 <label htmlFor="email" className="font-bold block mb-2">Email</label>
                 <form className="p-inputgroup w-full" onSubmit={handleSubmit}>
