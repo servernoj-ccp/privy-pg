@@ -14,19 +14,26 @@ export default function ({ role }: PropsWithChildren<Props>) {
   const { identityToken } = useIdentityToken()
   const { logout } = useLogout()
 
-  const { ready, authenticated } = usePrivy()
+  const { ready, authenticated, user } = usePrivy()
   useEffect(
     () => {
       const run = async () => {
-        if (ready && !authenticated) {
+        console.log('---', user?.customMetadata)
+        if (
+          ready && (
+            !authenticated || (
+              !user?.customMetadata?.isSeller && role === 'seller'
+            )
+          )
+        ) {
+          await logout()
           await navigate(`/${role}/login?return=${pathname}`)
         }
       }
       run()
     },
-    [ready, authenticated]
+    [ready, authenticated, user, pathname]
   )
-
 
   return ready
     ? (

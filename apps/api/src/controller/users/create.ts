@@ -5,6 +5,7 @@ import { FailedDependencyError, InternalServerError, isHttpError } from 'http-er
 const handler: RequestHandler = async (req, res, next) => {
   try {
     const { email } = res.locals.parsed.body
+    const { privyClient } = res.locals
     let user = await User.findOne({
       where: {
         email
@@ -15,24 +16,32 @@ const handler: RequestHandler = async (req, res, next) => {
     }
     try {
       // -- Privy
-      let privyUser = await res.locals.privyClient.getUserByEmail(email)
+      let privyUser = await privyClient.getUserByEmail(email)
       if (!privyUser) {
         console.log('Creating Privy user')
-        privyUser = await res.locals.privySellerClient.importUser({
+        privyUser = await privyClient.importUser({
           createEthereumWallet: false,
           linkedAccounts: [{
             address: email,
             type: 'email'
-          }],
-          customMetadata: {
-            role: 'seller'
-          }
+          }]
         })
       }
+      await privyClient.setCustomMetadata(privyUser.id, {
+        ...(
+          privyUser.customMetadata ?? {}
+        ),
+        isSeller: true
+      })
       user = await User.create({
         email,
         privy_id: privyUser.id,
-        roles: ['seller']
+        roles: [
+          'seller',
+          ...(
+            privyUser.customMetadata?.isBuyer ? ['buyer'] : []
+          )
+        ]
       })
       res.json(user)
     } catch (e) {

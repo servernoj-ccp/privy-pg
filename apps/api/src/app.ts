@@ -6,7 +6,19 @@ import { errorHandler } from '@/controller/middleware'
 import cookieParser from 'cookie-parser'
 
 const app = express()
-app.use(cors())
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      const allowedOrigins = process.env.CLIENT_ORIGIN?.split(/\s*[|]\s*/) ?? []
+      if (!origin || allowedOrigins.includes(origin)) {
+        cb(null, true)
+      } else {
+        cb(new Error('Not allowed origin'))
+      }
+    },
+    credentials: true
+  })
+)
 app.use(morgan('dev'))
 app.use(cookieParser())
 app.use('/', controller)

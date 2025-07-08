@@ -2,8 +2,7 @@ import errorHandler from './errorHandler'
 import validator from './validator'
 import basicAuth from './basicAuth'
 import injectClients from './injectClients'
-import verifySeller from './verifySeller'
-import verifyBuyer from './verifyBuyer'
+import verifyPrivyToken from './verifyPrivyToken'
 import queryTypes from './queryTypes'
 
 export {
@@ -11,7 +10,6 @@ export {
   validator,
   basicAuth,
   injectClients,
-  verifySeller,
-  verifyBuyer,
+  verifyPrivyToken,
   queryTypes
 }

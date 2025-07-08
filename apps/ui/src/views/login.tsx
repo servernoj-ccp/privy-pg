@@ -1,3 +1,4 @@
+import { api } from '@/axios'
 import { useToast } from '@/toast'
 import { useLoginWithEmail, usePrivy } from '@privy-io/react-auth'
 import { Button } from 'primereact/button'
@@ -14,9 +15,16 @@ type Props = {
 export default function ({ disableSignup = false }: PropsWithChildren<Props>) {
   const { loginWithCode, sendCode, state } = useLoginWithEmail({
     onComplete: async ({ isNewUser, user }) => {
+      const userRoles = (user.customMetadata?.roles ?? []) as Array<string>
+      if (
+        role === 'buyer' &&
+        isNewUser
+      ) {
+        await api.post('/buyers')
+      }
       if (
         role === 'seller' &&
-        user.customMetadata?.role !== 'seller'
+        !userRoles.includes('seller')
       ) {
         errorHandler(new Error('Invalid role'))
         await new Promise<void>(
