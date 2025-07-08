@@ -1,14 +1,16 @@
 import { api } from '@/axios'
-import { useLoginWithEmail, usePrivy, useUser } from '@privy-io/react-auth'
+import { useLoginWithEmail, usePrivy, useUser, useCreateWallet } from '@privy-io/react-auth'
 import { Button } from 'primereact/button'
 import { Card } from 'primereact/card'
 import { InputOtp } from 'primereact/inputotp'
 import { InputText } from 'primereact/inputtext'
+import { ProgressSpinner } from 'primereact/progressspinner'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 export default function () {
   const { refreshUser } = useUser()
+  const { createWallet } = useCreateWallet()
   const { loginWithCode, sendCode, state } = useLoginWithEmail({
     onComplete: async ({ isNewUser, user }) => {
       if (
@@ -16,6 +18,7 @@ export default function () {
           isNewUser || !user.customMetadata?.isBuyer
         )
       ) {
+        await createWallet()
         await api.post('/buyers')
         await refreshUser()
       }
@@ -114,6 +117,7 @@ export default function () {
                 </form>
               </Card>
               : <>
+                <ProgressSpinner aria-label="Loading" />
               </>
     }
   </div>

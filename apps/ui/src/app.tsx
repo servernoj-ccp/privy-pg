@@ -28,11 +28,11 @@ function App () {
             <Route index element={<GuestBuyer/>}/>
             <Route path="login" element={<Login/>}/>
             <Route element={<AuthGuard key='buyer'/>}>
-              {/* <Route element={<WalletGuard/>}> */}
-              <Route element={<TokenGuard/>}>
-                <Route path='authenticated' element={<AuthenticatedBuyer/>}/>
+              <Route element={<WalletGuard/>}>
+                <Route element={<TokenGuard/>}>
+                  <Route path='authenticated' element={<AuthenticatedBuyer/>}/>
+                </Route>
               </Route>
-              {/* </Route> */}
             </Route>
           </Route>
         </Route>
