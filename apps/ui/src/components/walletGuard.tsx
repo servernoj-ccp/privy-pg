@@ -22,8 +22,7 @@ export default function () {
             ]
           }).catch(
             e => {
-              console.warn(e)
-              console.warn(user)
+              console.error(e)
             }
           )
         }
