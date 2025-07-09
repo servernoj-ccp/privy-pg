@@ -22,8 +22,6 @@ export default function () {
             ]
           }).catch(
             e => {
-              const { message } = e as Error
-              console.error(message)
               console.warn(e)
               console.warn(user)
             }
