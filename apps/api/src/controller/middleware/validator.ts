@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { BadRequestError } from 'http-errors-enhanced'
 import { Request, RequestHandler } from 'express'
 import { isEmpty, toPairs } from 'lodash-es'
