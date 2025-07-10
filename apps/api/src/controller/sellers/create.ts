@@ -2,13 +2,6 @@ import { User } from '@/db/models'
 import type { RequestHandler } from 'express'
 import { FailedDependencyError, InternalServerError, isHttpError } from 'http-errors-enhanced'
 
-/**
- * A new Seller user is created with BOTH "Seller" and "Buyer" roles by default. They receive the following
- * "buyer" configuration on top of standard "seller" options:
- * 1. The `isBuyer` flag set to `true` in Privy user's `customMetadata`
- * 2. Role ['buyer'] in local DB
- */
-
 const handler: RequestHandler = async (req, res, next) => {
   try {
     const { email } = res.locals.parsed.body
@@ -29,8 +22,7 @@ const handler: RequestHandler = async (req, res, next) => {
         ...(
           privyUser.customMetadata ?? {}
         ),
-        isSeller: true,
-        isBuyer: true
+        isSeller: true
       })
       const [user, created] = await User.findOrCreate({
         where: {
@@ -39,7 +31,7 @@ const handler: RequestHandler = async (req, res, next) => {
         defaults: {
           email,
           privy_id: privyUser.id,
-          roles: ['seller', 'buyer']
+          roles: ['seller']
         }
       })
       if (!created && privyUser.customMetadata.isBuyer) {
