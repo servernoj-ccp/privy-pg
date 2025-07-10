@@ -13,7 +13,9 @@ export default function () {
   const { createWallet } = useCreateWallet()
   const { loginWithCode, sendCode, state } = useLoginWithEmail({
     onComplete: async ({ isNewUser, user }) => {
-      await createWallet()
+      if (!user?.wallet) {
+        await createWallet()
+      }
       if (
         role === 'buyer' && (
           isNewUser || !user.customMetadata?.isBuyer
