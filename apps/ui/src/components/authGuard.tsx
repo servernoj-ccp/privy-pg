@@ -18,8 +18,14 @@ export default function () {
     () => {
       const run = async () => {
         if (ready) {
-          const isAuthorizedSeller = Boolean(user?.customMetadata?.isSeller) && role === 'seller'
-          const isAuthorizedBuyer = Boolean(user?.customMetadata?.isBuyer) && role === 'buyer'
+          const isAuthorizedSeller = (
+            user?.customMetadata?.role === 'BRAND_OWNER' &&
+            role === 'seller'
+          )
+          const isAuthorizedBuyer = (
+            user?.customMetadata?.role === 'BACKER' &&
+            role === 'buyer'
+          )
           const isAuthorized = isAuthorizedSeller || isAuthorizedBuyer
           setAuthorized(isAuthorized)
           if (!authenticated || !isAuthorized) {
