@@ -7,6 +7,9 @@ import 'primeicons/primeicons.css'
 import App from '@/app'
 import { ToastContext } from '@/toast'
 import { Toast } from 'primereact/toast'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 const init = async () => {
   const Root = () => {
@@ -15,7 +18,9 @@ const init = async () => {
       // <StrictMode>
       <PrimeReactProvider>
         <ToastContext.Provider value={toastRef}>
-          <App />
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
           <Toast ref={toastRef}/>
         </ToastContext.Provider>
       </PrimeReactProvider>

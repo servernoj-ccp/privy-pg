@@ -6,6 +6,7 @@ import WalletGuard from '@/components/walletGuard'
 import TokenGuard from '@/components/tokenGuard'
 import Login from '@/views/login'
 import Seller from '@/views/seller'
+import StripeOnboarding from '@/views/seller/stripeOnboarding'
 import GuestBuyer from '@/views/buyer'
 import AuthenticatedBuyer from '@/views/buyer/authenticated'
 import { PrivyProvider } from '@privy-io/react-auth'
@@ -21,6 +22,7 @@ function App () {
             <Route element={<AuthGuard key='seller'/>}>
               <Route element={<TokenGuard/>}>
                 <Route index element={<Seller/>}/>
+                <Route path="kyc/stripe" element={<StripeOnboarding/>}/>
               </Route>
             </Route>
           </Route>

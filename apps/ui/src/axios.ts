@@ -1,15 +1,7 @@
 import axios, { isAxiosError } from 'axios'
 
-const getBaseURL = () => {
-  let baseURL = import.meta.env.VITE_API_BASE_URL
-  if (!baseURL) {
-    baseURL = `${location.protocol}//api.${location.hostname}`
-  }
-  return baseURL
-}
-
 const api = axios.create({
-  baseURL: getBaseURL(),
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true
 })
 api.interceptors.response.use(

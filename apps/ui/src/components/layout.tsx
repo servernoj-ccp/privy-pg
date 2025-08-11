@@ -19,9 +19,20 @@ export default function ()  {
     {
       label: 'Seller',
       icon: 'pi pi-briefcase',
-      command: () => {
-        navigate('/seller')
-      }
+      items: [
+        {
+          label: 'Profile',
+          command: () => {
+            navigate('/seller')
+          }
+        },
+        {
+          label: 'Stripe onboarding',
+          command: () => {
+            navigate('/seller/kyc/stripe')
+          }
+        }
+      ]
     },
     {
       label: 'Buyer',
