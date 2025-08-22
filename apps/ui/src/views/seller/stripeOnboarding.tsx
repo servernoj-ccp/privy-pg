@@ -3,6 +3,7 @@ import { loadConnectAndInitialize, type StripeConnectInstance } from '@stripe/co
 import { api } from '@/axios'
 import { ConnectAccountOnboarding, ConnectComponentsProvider } from '@stripe/react-connect-js'
 import { useToast } from '@/toast'
+import { ProgressSpinner } from 'primereact/progressspinner'
 
 type CrowdSplitResponseKYC = {
   stripe: {
@@ -27,7 +28,6 @@ export default function Onboarding () {
 
   useEffect(() => {
     let isMounted = true
-
     async function initStripe () {
       try {
         const { stripe } = await api.get<CrowdSplitResponseKYC>('cs/sellers/kyc')
@@ -38,24 +38,22 @@ export default function Onboarding () {
           publishableKey: stripe.connected_account.publishableKey ?? '',
           fetchClientSecret: async () => stripe.connected_account.clientSecret ?? ''
         }
-
         const stripeConnect = loadConnectAndInitialize(connectInitData)
-
         setConnectInstance(stripeConnect)
       } catch (err) {
         console.error('Stripe init failed:', err)
       }
     }
-
     initStripe()
-
     return () => {
       isMounted = false
     }
   }, [])
 
   if (!connectInstance) {
-    return <p>Loading Stripe onboarding…</p>
+    return <section className='h-full w-full flex justify-center items-center'>
+      <ProgressSpinner aria-label="Loading" />
+    </section>
   }
 
   return <article className='h-full overflow-y-auto p-8 flex justify-center'>
