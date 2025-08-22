@@ -23,7 +23,7 @@ export default function () {
             role === 'seller'
           )
           const isAuthorizedBuyer = (
-            // user?.customMetadata?.role === 'BACKER' &&
+            user?.customMetadata?.role === 'BACKER' &&
             role === 'buyer'
           )
           const isAuthorized = isAuthorizedSeller || isAuthorizedBuyer
