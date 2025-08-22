@@ -16,24 +16,24 @@ export default function ()  {
         navigate('/')
       }
     },
-    {
-      label: 'Seller',
-      icon: 'pi pi-briefcase',
-      items: [
-        {
-          label: 'Profile',
-          command: () => {
-            navigate('/seller')
-          }
-        },
-        {
-          label: 'Stripe onboarding',
-          command: () => {
-            navigate('/seller/kyc/stripe')
-          }
-        }
-      ]
-    },
+    // {
+    //   label: 'Seller',
+    //   icon: 'pi pi-briefcase',
+    //   items: [
+    //     {
+    //       label: 'Profile',
+    //       command: () => {
+    //         navigate('/seller')
+    //       }
+    //     },
+    //     {
+    //       label: 'Stripe onboarding',
+    //       command: () => {
+    //         navigate('/seller/kyc/stripe')
+    //       }
+    //     }
+    //   ]
+    // },
     {
       label: 'Buyer',
       icon: 'pi pi-credit-card',
