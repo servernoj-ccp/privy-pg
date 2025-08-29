@@ -1,4 +1,5 @@
-import { useLoginWithEmail, usePrivy, useCreateWallet } from '@privy-io/react-auth'
+import { api } from '@/axios'
+import { useLoginWithEmail, usePrivy, useCreateWallet, useUser } from '@privy-io/react-auth'
 import { Button } from 'primereact/button'
 import { Card } from 'primereact/card'
 import { InputOtp } from 'primereact/inputotp'
@@ -9,11 +10,16 @@ import { useLocation, useNavigate } from 'react-router'
 
 export default function () {
   const { createWallet } = useCreateWallet()
+  const { refreshUser } = useUser()
   const { loginWithCode, sendCode, state } = useLoginWithEmail({
-    onComplete: async ({ user }) => {
+    onComplete: async ({ user, isNewUser }) => {
       if (role === 'buyer') {
         if (!user?.wallet) {
           await createWallet()
+        }
+        if (isNewUser) {
+          await api.post('/cs/buyers')
+          await refreshUser()
         }
       }
       const returnPath = new URLSearchParams(search).get('return') ?? '../'

@@ -49,6 +49,12 @@ export default function ()  {
           command: () => {
             navigate('/buyer/authenticated')
           }
+        },
+        {
+          label: 'Checkout',
+          command: () => {
+            navigate('/buyer/checkout')
+          }
         }
       ]
     }

@@ -169,6 +169,12 @@ importers:
       '@stripe/react-connect-js':
         specifier: ^3.3.25
         version: 3.3.25(@stripe/connect-js@3.3.27)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@stripe/react-stripe-js':
+        specifier: ^3.9.2
+        version: 3.9.2(@stripe/stripe-js@7.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@stripe/stripe-js':
+        specifier: ^7.9.0
+        version: 7.9.0
       '@tailwindcss/typography':
         specifier: ^0.5.16
         version: 0.5.16(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.11.22)(@types/node@22.15.3)(typescript@5.8.3)))
@@ -1158,6 +1164,17 @@ packages:
       '@stripe/connect-js': '>=3.3.27'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
+
+  '@stripe/react-stripe-js@3.9.2':
+    resolution: {integrity: sha512-urAZek4LrnHWfk4WYXItOiX+6xyxjcn0SkhBDoysXphLkUt92UWCd5+NlomhVqaLo98XiUQGZRiRcL8HOHZ8Jw==}
+    peerDependencies:
+      '@stripe/stripe-js': '>=1.44.1 <8.0.0'
+      react: '>=16.8.0 <20.0.0'
+      react-dom: '>=16.8.0 <20.0.0'
+
+  '@stripe/stripe-js@7.9.0':
+    resolution: {integrity: sha512-ggs5k+/0FUJcIgNY08aZTqpBTtbExkJMYMLSMwyucrhtWexVOEY1KJmhBsxf+E/Q15f5rbwBpj+t0t2AW2oCsQ==}
+    engines: {node: '>=12.16'}
 
   '@swc/core-darwin-arm64@1.11.22':
     resolution: {integrity: sha512-upSiFQfo1TE2QM3+KpBcp5SrOdKKjoc+oUoD1mmBDU2Wv4Bjjv16Z2I5ADvIqMV+b87AhYW+4Qu6iVrQD7j96Q==}
@@ -6445,6 +6462,15 @@ snapshots:
       '@stripe/connect-js': 3.3.27
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
+
+  '@stripe/react-stripe-js@3.9.2(@stripe/stripe-js@7.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@stripe/stripe-js': 7.9.0
+      prop-types: 15.8.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  '@stripe/stripe-js@7.9.0': {}
 
   '@swc/core-darwin-arm64@1.11.22':
     optional: true

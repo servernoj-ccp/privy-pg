@@ -10,6 +10,8 @@ import StripeOnboarding from '@/views/seller/stripeOnboarding'
 import GuestBuyer from '@/views/buyer'
 import AuthenticatedBuyer from '@/views/buyer/authenticated'
 import { PrivyProvider } from '@privy-io/react-auth'
+import Status from '@/views/buyer/status'
+import Checkout from '@/views/buyer/checkout'
 
 function App () {
   return <BrowserRouter>
@@ -28,11 +30,13 @@ function App () {
           </Route>
           <Route path="/buyer/*" >
             <Route index element={<GuestBuyer/>}/>
+            <Route path="status" element={<Status/>}/>
             <Route path="login" element={<Login/>}/>
             <Route element={<AuthGuard key='buyer'/>}>
               <Route element={<WalletGuard/>}>
                 <Route element={<TokenGuard/>}>
                   <Route path='authenticated' element={<AuthenticatedBuyer/>}/>
+                  <Route path='checkout' element={<Checkout/>}/>
                 </Route>
               </Route>
             </Route>
