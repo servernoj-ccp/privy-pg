@@ -16,6 +16,7 @@ type CreateIntentResponse = {
 export default function () {
   const navigate = useNavigate()
   const [clientSecret, setClientSecret] = useState('')
+  const [publishableKey, setPublishableKey] = useState('')
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null>>()
   const clientSecretFetched = useRef(false)
   const { user: buyer } = usePrivy()
@@ -33,6 +34,7 @@ export default function () {
             await api.post<CreateIntentResponse>('cs/buyers/create-intent').then(
               async data => {
                 setClientSecret(data.clientSecret)
+                setPublishableKey(data.publishableKey)
                 setStripePromise(
                   loadStripe(data.publishableKey)
                 )
@@ -50,9 +52,7 @@ export default function () {
   )
 
   return clientSecret && stripePromise && (
-    <article
-      className='flex-grow flex flex-col gap-4 overflow-y-hidden w-full lg:w-3/4 lg:min-w-[600px] lg:max-w-[900px]'
-    >
+    <article className='flex-grow flex flex-col gap-4 overflow-y-hidden w-full lg:w-3/4 lg:min-w-[600px] lg:max-w-[900px]' >
       <Card title="Order summary" className="px-1"/>
       <div className='flex-grow overflow-y-auto'>
         <Elements
@@ -60,7 +60,7 @@ export default function () {
             clientSecret
           }}
           stripe={stripePromise} >
-          <CheckoutForm/>
+          <CheckoutForm publishableKey={publishableKey}/>
         </Elements>
       </div>
     </article>

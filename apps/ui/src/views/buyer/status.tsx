@@ -1,3 +1,4 @@
+import { loadStripe, Stripe } from '@stripe/stripe-js'
 import { useState, useEffect, useRef } from 'react'
 
 export default function () {
@@ -6,7 +7,17 @@ export default function () {
 
   const onMount = async () => {
     const url = new URLSearchParams(window.location.search)
-    setParams(Object.fromEntries(url.entries()))
+    const p = Object.fromEntries(url.entries())
+    if (url.get('publishableKey')) {
+      const stripe = await loadStripe(url.get('publishableKey')!) as Stripe
+      const { setupIntent } = await stripe.retrieveSetupIntent(
+        url.get('setup_intent_client_secret') as string
+      )
+      if (setupIntent) {
+        Object.assign(p, { setupIntent })
+      }
+    }
+    setParams(p)
   }
   useEffect(
     () => {

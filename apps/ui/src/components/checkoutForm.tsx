@@ -9,10 +9,15 @@ import { Button } from 'primereact/button'
 import { useToast } from '@/toast'
 import { StripeAddressElementChangeEvent } from '@stripe/stripe-js'
 import { Card } from 'primereact/card'
+import { api } from '@/axios'
 
 type Shipping = StripeAddressElementChangeEvent['value']
 
-export default function () {
+type Props = {
+  publishableKey: string
+}
+
+export default function (props: Props) {
   const stripe = useStripe()
   const elements = useElements()
   const { errorHandler } = useToast()
@@ -31,6 +36,9 @@ export default function () {
     }
     try {
       setIsLoading(true)
+      // -- this call can be potentially moved into `handleAddressChange()`
+      await api.patch('/cs/buyers/customer', shipping)
+      // -- confirm the setup intent without declaring specific payment amount
       await stripe.confirmSetup({
         elements,
         confirmParams: {
