@@ -31,7 +31,11 @@ export default function () {
         clientSecretFetched.current = true
         const createIntent = async () => {
           try {
-            await api.post<CreateIntentResponse>('cs/buyers/create-intent').then(
+            await api.post<CreateIntentResponse>('cs/buyers/create-intent', {
+              metadata: {
+                order_id: '044d6682-a89a-4f18-96a0-c5c78f4eca6f'
+              }
+            }).then(
               async data => {
                 setClientSecret(data.clientSecret)
                 setPublishableKey(data.publishableKey)
