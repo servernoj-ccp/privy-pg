@@ -15,6 +15,7 @@ type Shipping = StripeAddressElementChangeEvent['value']
 
 type Props = {
   publishableKey: string
+  paymentMethodId: string
 }
 
 export default function (props: Props) {
@@ -38,6 +39,12 @@ export default function (props: Props) {
       setIsLoading(true)
       // -- this call can be potentially moved into `handleAddressChange()`
       await api.patch('/cs/buyers/customer', shipping)
+      // -- Emulate order placement
+      const order_id = '044d6682-a89a-4f18-96a0-c5c78f4eca6f'
+      // -- Update setup intent metadata
+      await api.patch(`/cs/buyers/intent/${props.paymentMethodId}/metadata`, {
+        order_id
+      })
       // -- confirm the setup intent without declaring specific payment amount
       await stripe.confirmSetup({
         elements,

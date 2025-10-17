@@ -11,12 +11,14 @@ import { Card } from 'primereact/card'
 type CreateIntentResponse = {
   clientSecret: string
   publishableKey: string
+  paymentMethodId: string
 }
 
 export default function () {
   const navigate = useNavigate()
   const [clientSecret, setClientSecret] = useState('')
   const [publishableKey, setPublishableKey] = useState('')
+  const [paymentMethodId, setPaymentMethodId] = useState('')
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null>>()
   const clientSecretFetched = useRef(false)
   const { user: buyer } = usePrivy()
@@ -31,17 +33,14 @@ export default function () {
         clientSecretFetched.current = true
         const createIntent = async () => {
           try {
-            await api.post<CreateIntentResponse>('cs/buyers/create-intent', {
-              metadata: {
-                order_id: '044d6682-a89a-4f18-96a0-c5c78f4eca6f'
-              }
-            }).then(
+            await api.post<CreateIntentResponse>('cs/buyers/intent').then(
               async data => {
                 setClientSecret(data.clientSecret)
                 setPublishableKey(data.publishableKey)
                 setStripePromise(
                   loadStripe(data.publishableKey)
                 )
+                setPaymentMethodId(data.paymentMethodId)
               }
             )
           } catch (e) {
@@ -64,7 +63,7 @@ export default function () {
             clientSecret
           }}
           stripe={stripePromise} >
-          <CheckoutForm publishableKey={publishableKey}/>
+          <CheckoutForm publishableKey={publishableKey} paymentMethodId={paymentMethodId}/>
         </Elements>
       </div>
     </article>
