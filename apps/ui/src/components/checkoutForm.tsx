@@ -40,7 +40,8 @@ export default function (props: Props) {
       // -- this call can be potentially moved into `handleAddressChange()`
       await api.patch('/cs/buyers/customer', shipping)
       // -- Emulate order placement
-      const order_id = '044d6682-a89a-4f18-96a0-c5c78f4eca6f'
+      const order_id = '1eb755ec-9b40-4d0d-8310-007fc7a73374'
+      // const order_id = '044d6682-a89a-4f18-96a0-c5c78f4eca6f'
       // -- Update setup intent metadata
       await api.patch(`/cs/buyers/intent/${props.paymentMethodId}/metadata`, {
         order_id

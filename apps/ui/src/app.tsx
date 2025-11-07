@@ -7,6 +7,7 @@ import TokenGuard from '@/components/tokenGuard'
 import Login from '@/views/login'
 import Seller from '@/views/seller'
 import StripeOnboarding from '@/views/seller/stripeOnboarding'
+import StripeOnboardingBypass from '@/views/seller/stripeOnboardingBypass'
 import GuestBuyer from '@/views/buyer'
 import AuthenticatedBuyer from '@/views/buyer/authenticated'
 import { PrivyProvider } from '@privy-io/react-auth'
@@ -21,6 +22,7 @@ function App () {
           <Route index element={<Home />} />
           <Route path="/seller/*">
             <Route path="login" element={<Login/>}/>
+            <Route path="onboarding" element={<StripeOnboardingBypass/>}/>
             <Route element={<AuthGuard key='seller'/>}>
               <Route element={<TokenGuard/>}>
                 <Route index element={<Seller/>}/>

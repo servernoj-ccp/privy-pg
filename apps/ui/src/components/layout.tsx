@@ -28,9 +28,21 @@ export default function ()  {
         },
         {
           label: 'Stripe onboarding',
-          command: () => {
-            navigate('/seller/kyc/stripe')
-          }
+          items: [
+            {
+              label: 'Auth based',
+              command: () => {
+                navigate('/seller/kyc/stripe')
+              }
+            },
+            {
+              label: 'Debug',
+              command: () => {
+                navigate('/seller/onboarding')
+              }
+            }
+          ]
+
         }
       ]
     },
